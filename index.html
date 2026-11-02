@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TATTY MIX — Sweet & Cute Mobile Shop</title>
+  <!-- Подключение Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Иконки FontAwesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;600;700&family=Nunito:wght@400;600;700;800&display=swap');
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background-color: #fff0f5;
+      color: #5a3d46;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    h1, h2, h3, .logo-font {
+      font-family: 'Comfortaa', cursive;
+    }
+
+    /* Кастомный скроллбар */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #fff0f5;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #ffb6c1;
+      border-radius: 10px;
+    }
+
+    /* Анимации */
+    .fade-in {
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .bounce-badge {
+      animation: bounce 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.3); }
+    }
+  </style>
+</head>
+<body class="pb-24 sm:pb-8 min-h-screen flex flex-col justify-between">
+
+  <!-- ШАПКА САЙТА (HEADER) -->
+  <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-pink-100 shadow-sm">
+    <div class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
+      <!-- Логотип -->
+      <a href="#" onclick="showSection('catalog'); return false;" class="logo-font font-bold text-xl sm:text-2xl text-pink-500 flex items-center gap-1.5 tracking-wide">
+        TATTY MIX <span class="text-2xl">🍓</span>
+      </a>
+
+      <!-- Меню для ПК -->
+      <nav class="hidden md:flex items-center gap-6 font-bold text-pink-400">
+        <button onclick="showSection('catalog')" class="hover:text-pink-600 transition">Сладости 🍩</button>
+        <button onclick="showSection('add')" class="hover:text-pink-600 transition">Добавить сет 🎀</button>
+        <button onclick="showSection('contacts')" class="hover:text-pink-600 transition">Контакты 📱</button>
+      </nav>
+
+      <!-- Правая часть: Корзина -->
+      <div class="flex items-center gap-2">
+        <button onclick="openCartModal()" class="relative bg-pink-100 hover:bg-pink-200 text-pink-600 font-bold px-3.5 py-2 rounded-full transition flex items-center gap-2 text-sm sm:text-base border border-pink-200 shadow-sm active:scale-95">
+          <i class="fa-solid fa-basket-shopping"></i>
+          <span class="hidden sm:inline">Корзина</span>
+          <span id="cart-count" class="bg-pink-500 text-white text-xs px-2 py-0.5 rounded-full font-bold">0</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Мобильная поисковая строка -->
+    <div class="max-w-4xl mx-auto px-4 pb-3">
+      <div class="relative">
+        <input type="text" id="search-input" oninput="filterProducts()" placeholder="Поиск сладких сетов..." 
+          class="w-full bg-pink-50/80 border border-pink-200 rounded-full py-2 pl-10 pr-4 text-sm text-pink-900 placeholder-pink-300 focus:outline-none focus:ring-2 focus:ring-pink-400 focus:bg-white transition">
+        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-2.5 text-pink-300 text-sm"></i>
+      </div>
+    </div>
+  </header>
+
+  <!-- ОСНОВНОЙ КОНТЕНТ -->
+  <main class="max-w-4xl mx-auto px-4 py-4 flex-grow w-full">
+
+    <!-- HERO БАННЕР -->
+    <section id="hero-banner" class="bg-gradient-to-r from-pink-300 via-pink-400 to-rose-400 rounded-3xl p-6 text-white text-center shadow-lg shadow-pink-200 mb-6 relative overflow-hidden fade-in">
+      <div class="relative z-10">
+        <h1 class="text-2xl sm:text-4xl font-bold mb-2">Самый сладкий микс в TATTY MIX 🍰</h1>
+        <p class="text-pink-100 text-xs sm:text-base max-w-md mx-auto mb-4">Розовый пикник, вкуснейшие сеты, напитки и милая атрибутика для идеального настроения!</p>
+        <button onclick="showSection('catalog')" class="bg-white text-pink-500 hover:bg-pink-50 font-bold px-6 py-2.5 rounded-full text-sm shadow-md transition transform active:scale-95 inline-flex items-center gap-2">
+          Выбрать вкусноту 🎀
+        </button>
+      </div>
+      <!-- Декоративные иконки -->
+      <i class="fa-solid fa-heart absolute -bottom-4 -left-4 text-white/20 text-7xl"></i>
+      <i class="fa-solid fa-candy-cane absolute -top-4 -right-4 text-white/20 text-7xl"></i>
+    </section>
+
+    <!-- РАЗДЕЛ 1: КАТАЛОГ СЛАДОСТЕЙ -->
+    <section id="section-catalog" class="fade-in">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-xl sm:text-2xl font-bold text-pink-600 flex items-center gap-2">
+          <span>Сладкий Каталог</span> 🍩
+        </h2>
+        <span id="items-count" class="text-xs bg-pink-100 text-pink-500 font-bold px-3 py-1 rounded-full">3 товара</span>
+      </div>
+
+      <!-- Сетка товаров -->
+      <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
+        <!-- Динамическая генерация карточек -->
+      </div>
+    </section>
+
+    <!-- РАЗДЕЛ 2: ФОРМА ДОБАВЛЕНИЯ ТОВАРА -->
+    <section id="section-add" class="hidden fade-in">
+      <div class="bg-white rounded-3xl p-6 shadow-md border border-pink-100 max-w-lg mx-auto">
+        <h2 class="text-xl font-bold text-pink-600 mb-2">Добавить новый сет 🍓</h2>
+        <p class="text-xs text-pink-400 mb-6">Заполните поля, чтобы добавить ваш сет в каталог магазина</p>
+
+        <form id="add-product-form" onsubmit="addNewProduct(event)" class="space-y-4">
+          <div>
+            <label class="block text-xs font-bold text-pink-500 uppercase tracking-wider mb-1">Название сета / товара</label>
+            <input type="text" id="new-title" placeholder="Например: Сет «Клубничный Бум»" required
+              class="w-full bg-pink-50/50 border border-pink-200 rounded-xl px-4 py-2.5 text-sm text-pink-900 focus:outline-none focus:ring-2 focus:ring-pink-400">
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-pink-500 uppercase tracking-wider mb-1">Ссылка на фото (Image URL)</label>
+            <input type="url" id="new-image" placeholder="https://images.unsplash.com/photo-..." required
+              class="w-full bg-pink-50/50 border border-pink-200 rounded-xl px-4 py-2.5 text-sm text-pink-900 focus:outline-none focus:ring-2 focus:ring-pink-400">
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-pink-500 uppercase tracking-wider mb-1">Цена (в тенге ₸)</label>
+            <input type="number" id="new-price" placeholder="4500" min="0" required
+              class="w-full bg-pink-50/50 border border-pink-200 rounded-xl px-4 py-2.5 text-sm text-pink-900 focus:outline-none focus:ring-2 focus:ring-pink-400">
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-pink-500 uppercase tracking-wider mb-1">Описание</label>
+            <textarea id="new-description" rows="3" placeholder="Опишите сладости или состав сета..." required
+              class="w-full bg-pink-50/50 border border-pink-200 rounded-xl px-4 py-2.5 text-sm text-pink-900 focus:outline-none focus:ring-2 focus:ring-pink-400"></textarea>
+          </div>
+
+          <button type="submit" class="w-full bg-pink-500 hover:bg-pink-600 text-white font-bold py-3 rounded-xl shadow-md shadow-pink-200 transition active:scale-95">
+            Добавить в каталог 💖
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <!-- РАЗДЕЛ 3: КОНТАКТЫ -->
+    <section id="section-contacts" class="hidden fade-in">
+      <div class="bg-white rounded-3xl p-6 shadow-md border border-pink-100 max-w-md mx-auto text-center">
+        <div class="w-16 h-16 bg-pink-100 text-pink-500 rounded-full flex items-center justify-center text-2xl mx-auto mb-4">
+          <i class="fa-solid fa-heart"></i>
+        </div>
+        <h2 class="text-xl font-bold text-pink-600 mb-2">Свяжитесь с нами 📞</h2>
+        <p class="text-xs text-pink-400 mb-6">Мы всегда рады ответить на ваши вопросы и принять заказ!</p>
+
+        <!-- Кнопки мессенджеров -->
+        <div class="space-y-3 mb-6">
+          <a href="https://wa.me/77750284004" target="_blank" 
+            class="flex items-center justify-between bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-700 font-bold p-3.5 rounded-2xl transition group">
+            <div class="flex items-center gap-3">
+              <i class="fa-brands fa-whatsapp text-2xl text-emerald-500"></i>
+              <span class="text-sm">Написать в WhatsApp (+7 775 028 4004)</span>
+            </div>
+            <i class="fa-solid fa-arrow-right text-xs opacity-50 group-hover:translate-x-1 transition"></i>
+          </a>
+
+          <a href="https://tiktok.com/@tatty.mix" target="_blank" 
+            class="flex items-center justify-between bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-800 font-bold p-3.5 rounded-2xl transition group">
+            <div class="flex items-center gap-3">
+              <i class="fa-brands fa-tiktok text-2xl text-black"></i>
+              <span class="text-sm">Наш TikTok @tatty.mix</span>
+            </div>
+            <i class="fa-solid fa-arrow-right text-xs opacity-50 group-hover:translate-x-1 transition"></i>
+          </a>
+        </div>
+
+        <div class="border-t border-pink-100 pt-4 text-xs text-pink-400 space-y-1">
+          <p><strong>Телефон / WhatsApp:</strong> +7 (775) 028-40-04</p>
+          <p><strong>Адрес:</strong> с. Аксу, Сайрамский район, Туркестанская область, ул. Пратова 4</p>
+          <p><strong>Режим работы:</strong> Круглосуточно, 24/7 (без выходных)</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- МОБИЛЬНАЯ НИЖНЯЯ НАВИГАЦИЯ (BOTTOM NAV) -->
+  <div class="md:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-pink-100 px-6 py-2.5 flex justify-around items-center z-40 shadow-lg">
+    <button onclick="showSection('catalog')" id="tab-catalog" class="flex flex-col items-center gap-1 text-pink-500 font-bold text-xs">
+      <i class="fa-solid fa-store text-lg"></i>
+      <span>Сладости</span>
+    </button>
+    <button onclick="showSection('add')" id="tab-add" class="flex flex-col items-center gap-1 text-pink-300 font-bold text-xs">
+      <i class="fa-solid fa-plus-circle text-lg"></i>
+      <span>Добавить</span>
+    </button>
+    <button onclick="showSection('contacts')" id="tab-contacts" class="flex flex-col items-center gap-1 text-pink-300 font-bold text-xs">
+      <i class="fa-solid fa-address-book text-lg"></i>
+      <span>Контакты</span>
+    </button>
+  </div>
+
+  <!-- МОДАЛЬНОЕ ОКНО КОРЗИНЫ -->
+  <div id="cart-modal" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl w-full max-w-md p-6 shadow-2xl border border-pink-100 flex flex-col max-h-[85vh]">
+      <!-- Заголовок -->
+      <div class="flex items-center justify-between pb-3 border-b border-pink-100">
+        <h3 class="font-bold text-lg text-pink-600 flex items-center gap-2">
+          <span>Ваша Корзина</span> 🧺
+        </h3>
+        <button onclick="closeCartModal()" class="text-pink-300 hover:text-pink-500 text-xl font-bold w-8 h-8 rounded-full flex items-center justify-center bg-pink-50">
+          &times;
+        </button>
+      </div>
+
+      <!-- Список товаров -->
+      <div id="cart-items-list" class="py-4 overflow-y-auto space-y-3 flex-grow">
+        <!-- Товары корзины -->
+      </div>
+
+      <!-- Итог и кнопка заказа -->
+      <div class="pt-4 border-t border-pink-100 space-y-3">
+        <div class="flex items-center justify-between font-bold text-base">
+          <span class="text-pink-400">Итого:</span>
+          <span id="cart-total-price" class="text-xl text-pink-600">0 ₸</span>
+        </div>
+        <button onclick="checkout()" class="w-full bg-pink-500 hover:bg-pink-600 text-white font-bold py-3 rounded-xl shadow-md shadow-pink-200 transition active:scale-95">
+          Оформить заказ 🎉
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ПОДВАЛ (FOOTER) -->
+  <footer class="hidden md:block bg-pink-200 text-pink-700 text-center py-4 text-xs font-semibold">
+    <p>&copy; 2026 TATTY MIX. Сделай свою жизнь слаще 💖</p>
+  </footer>
+
+  <!-- JAVASCRIPT ЛОГИКА -->
+  <script>
+    // Начальный список товаров (пустой для вашего мармелада)
+    const defaultProducts = [];
+
+    let products = [...defaultProducts];
+    let cart = [];
+
+    // Переключение разделов (Табы)
+    function showSection(sectionId) {
+      document.getElementById('section-catalog').classList.add('hidden');
+      document.getElementById('section-add').classList.add('hidden');
+      document.getElementById('section-contacts').classList.add('hidden');
+
+      const hero = document.getElementById('hero-banner');
+
+      ['catalog', 'add', 'contacts'].forEach(tab => {
+        const btn = document.getElementById(`tab-${tab}`);
+        if (btn) {
+          btn.classList.remove('text-pink-500');
+          btn.classList.add('text-pink-300');
+        }
+      });
+
+      if (sectionId === 'catalog') {
+        document.getElementById('section-catalog').classList.remove('hidden');
+        hero.classList.remove('hidden');
+        document.getElementById('tab-catalog')?.classList.replace('text-pink-300', 'text-pink-500');
+      } else if (sectionId === 'add') {
+        document.getElementById('section-add').classList.remove('hidden');
+        hero.classList.add('hidden');
+        document.getElementById('tab-add')?.classList.replace('text-pink-300', 'text-pink-500');
+      } else if (sectionId === 'contacts') {
+        document.getElementById('section-contacts').classList.remove('hidden');
+        hero.classList.add('hidden');
+        document.getElementById('tab-contacts')?.classList.replace('text-pink-300', 'text-pink-500');
+      }
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Отрисовка каталога
+    function renderProducts(items = products) {
+      const grid = document.getElementById('products-grid');
+      const countEl = document.getElementById('items-count');
+      grid.innerHTML = '';
+
+      countEl.textContent = `${items.length} товара(ов)`;
+
+      if (items.length === 0) {
+        grid.innerHTML = `
+          <div class="col-span-full text-center py-12 bg-white rounded-3xl border border-pink-100 p-6">
+            <i class="fa-solid fa-cookie-bite text-pink-200 text-5xl mb-3"></i>
+            <p class="text-pink-500 font-bold text-base mb-1">Товары не найдены 🌸</p>
+          </div>
+        `;
+        return;
+      }
+
+      items.forEach(product => {
+        const card = document.createElement('article');
+        card.className = 'bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md border border-pink-100 flex flex-col transition transform hover:-translate-y-1';
+        card.innerHTML = `
+          <div class="relative h-44 overflow-hidden bg-pink-50">
+            <img src="${product.image}" alt="${product.title}" 
+              onerror="this.src='https://via.placeholder.com/400x300/ffb6c1/ffffff?text=TATTY+MIX'" 
+              class="w-full h-full object-cover">
+          </div>
+          <div class="p-4 flex flex-col flex-grow justify-between">
+            <div>
+              <h3 class="font-bold text-pink-700 text-base mb-1">${product.title}</h3>
+              <p class="text-xs text-pink-400 mb-3 line-clamp-2">${product.description}</p>
+            </div>
+            <div class="flex items-center justify-between pt-2 border-t border-pink-50">
+              <span class="font-extrabold text-pink-600 text-base">${product.price.toLocaleString()} ₸</span>
+              <button onclick="addToCart(${product.id})" class="bg-pink-500 hover:bg-pink-600 active:scale-90 text-white font-bold text-xs px-3 py-2 rounded-xl transition flex items-center gap-1 shadow-sm">
+                <span>В корзину</span> 🛍️
+              </button>
+            </div>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    // Живой поиск
+    function filterProducts() {
+      showSection('catalog');
+      const query = document.getElementById('search-input').value.toLowerCase().trim();
+      const filtered = products.filter(p => 
+        p.title.toLowerCase().includes(query) || 
+        p.description.toLowerCase().includes(query)
+      );
+      renderProducts(filtered);
+    }
+
+    // Добавление собственного товара
+    function addNewProduct(event) {
+      event.preventDefault();
+
+      const title = document.getElementById('new-title').value.trim();
+      const image = document.getElementById('new-image').value.trim();
+      const price = Number(document.getElementById('new-price').value);
+      const description = document.getElementById('new-description').value.trim();
+
+      const newProd = {
+        id: Date.now(),
+        title,
+        image,
+        price,
+        description
+      };
+
+      // Добавляем новый сет в начало списка
+      products.unshift(newProd);
+      
+      // Сбрасываем строку поиска, чтобы новый товар не срывался фильтром
+      document.getElementById('search-input').value = '';
+
+      // Перерисовываем каталог и переключаемся на вкладку "Сладости"
+      renderProducts(products);
+      document.getElementById('add-product-form').reset();
+
+      alert('Ваш новый сет успешно добавлен! 🌸');
+      showSection('catalog');
+    }
+
+    // Работа с корзиной
+    function addToCart(productId) {
+      const product = products.find(p => p.id === productId);
+      if (product) {
+        cart.push(product);
+        updateCartCount();
+
+        const countBadge = document.getElementById('cart-count');
+        countBadge.classList.add('bounce-badge');
+        setTimeout(() => countBadge.classList.remove('bounce-badge'), 400);
+      }
+    }
+
+    function updateCartCount() {
+      document.getElementById('cart-count').textContent = cart.length;
+    }
+
+    function openCartModal() {
+      const modal = document.getElementById('cart-modal');
+      const list = document.getElementById('cart-items-list');
+      const totalEl = document.getElementById('cart-total-price');
+
+      list.innerHTML = '';
+      let total = 0;
+
+      if (cart.length === 0) {
+        list.innerHTML = `
+          <div class="text-center py-8">
+            <i class="fa-solid fa-basket-shopping text-pink-200 text-4xl mb-2"></i>
+            <p class="text-pink-400 font-bold text-sm">Ваша корзина пока пуста</p>
+            <p class="text-xs text-pink-300">Выберите что-нибудь вкусное!</p>
+          </div>
+        `;
+      } else {
+        cart.forEach((item, index) => {
+          total += item.price;
+          const row = document.createElement('div');
+          row.className = 'flex items-center justify-between p-2.5 bg-pink-50/50 rounded-xl border border-pink-100 text-sm';
+          row.innerHTML = `
+            <div class="flex items-center gap-2 overflow-hidden">
+              <img src="${item.image}" alt="${item.title}" class="w-10 h-10 rounded-lg object-cover flex-shrink-0">
+              <div class="truncate">
+                <p class="font-bold text-pink-700 truncate text-xs">${item.title}</p>
+                <p class="text-pink-500 font-extrabold text-xs">${item.price.toLocaleString()} ₸</p>
+              </div>
+            </div>
+            <button onclick="removeFromCart(${index})" class="text-pink-300 hover:text-pink-600 p-1 font-bold text-base transition">
+              <i class="fa-solid fa-trash-can"></i>
+            </button>
+          `;
+          list.appendChild(row);
+        });
+      }
+
+      totalEl.textContent = `${total.toLocaleString()} ₸`;
+      modal.classList.remove('hidden');
+    }
+
+    function removeFromCart(index) {
+      cart.splice(index, 1);
+      updateCartCount();
+      openCartModal();
+    }
+
+    function closeCartModal() {
+      document.getElementById('cart-modal').classList.add('hidden');
+    }
+
+    function checkout() {
+      if (cart.length === 0) {
+        alert('Корзина пуста!');
+        return;
+      }
+      const total = cart.reduce((sum, item) => sum + item.price, 0);
+      alert(`Спасибо за заказ в TATTY MIX! 🎉\nОбщая сумма: ${total.toLocaleString()} ₸`);
+      cart = [];
+      updateCartCount();
+      closeCartModal();
+    }
+
+    // Инициализация при старте
+    renderProducts();
+  </script>
+</body>
+</html>
